@@ -42,6 +42,7 @@ Here is an example how to add `LdapAuthenticator` using a `CachingAuthenticator`
 
 ```java
 @Override
+<<<<<<< HEAD
 public void run(Configuration configuration, Environment environment) throws Exception {
     LdapConfiguration ldapConfiguration = configuration.getLdapConfiguration();
     Authenticator<BasicCredentials, BasicCredentials> ldapAuthenticator = new CachingAuthenticator<>(
@@ -52,6 +53,18 @@ public void run(Configuration configuration, Environment environment) throws Exc
     environment.jersey().register(new BasicAuthProvider<>(ldapAuthenticator, "realm"));
     environment.healthChecks().register("ldap",
             new LdapHealthCheck<>(new ResourceAuthenticator(new LdapCanAuthenticate(ldapConfiguration))));
+=======
+    public void run(Configuration configuration, Environment environment) throws Exception {
+        LdapConfiguration ldapConfiguration = configuration.getLdapConfiguration();
+        Authenticator<BasicCredentials, BasicCredentials> ldapAuthenticator = new CachingAuthenticator<>(
+                environment.metrics(),
+                new ResourceAuthenticator(new LdapAuthenticator(ldapConfiguration)),
+                ldapConfiguration.getCachePolicy());
+
+        environment.jersey().register(new BasicAuthProvider<>(ldapAuthenticator, "realm"));
+        environment.healthChecks().register("ldap",
+                new LdapHealthCheck<>(new ResourceAuthenticator(new LdapCanAuthenticate(ldapConfiguration))));
+>>>>>>> 56bc9efe09dc6ee8ae027fec9471e7fa5a19884c
 }
 ```
 
